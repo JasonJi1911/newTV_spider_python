@@ -70,7 +70,7 @@ class Ifvod2Spider(scrapy.Spider):
         print('爬虫结束了')
 
     def start_requests(self):
-        for i in range(0, 1, 1):
+        for i in range(0, 2, 1):
             # for i in range(0, len(self.start_urls), 1):
             req_url = self.start_urls[i]
             # req_url = 'http://www.baidu.com'
@@ -168,8 +168,8 @@ class Ifvod2Spider(scrapy.Spider):
         # content = soup.select_one('.summary').string
         # parent_item['vod_content'] = content
 
-        # for i in range(0, 1, 1):
         ss = len(play_list)
+        # for i in range(0, 1, 1):
         for i in range(0, len(play_list), 1):
             play = play_list[i]
             try:

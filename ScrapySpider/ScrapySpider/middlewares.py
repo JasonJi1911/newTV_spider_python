@@ -15,10 +15,12 @@ from scrapy.http import HtmlResponse
 from selenium import webdriver
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from browsermobproxy import Server
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class ScrapyspiderSpiderMiddleware:
@@ -128,7 +130,7 @@ class SelenuimDownloaderMiddleware:
         capabilities = DesiredCapabilities.CHROME.copy()
         capabilities['acceptSslCerts'] = True
         capabilities['acceptInsecureCerts'] = True
-        chrome = webdriver.Chrome(executable_path=r'C:\Users\Administrator\Desktop\newTV_spider_python\ScrapySpider\ScrapySpider\ChromeDriver\chromedriver.exe'
+        chrome: WebDriver = webdriver.Chrome(executable_path=r'C:\Users\Administrator\Desktop\newTV_spider_python\ScrapySpider\ScrapySpider\ChromeDriver\chromedriver.exe'
                                   , chrome_options=chrome_options, desired_capabilities=capabilities)
         url = request.url
         proxy.new_har(options={'captureHeaders': True, 'captureContent': True})
@@ -147,8 +149,20 @@ class SelenuimDownloaderMiddleware:
             cookief.write(json.dumps(chrome.get_cookies()))
         if 'id=' in url and 'a=' not in url:
             chrome.refresh()
+            # chrome.find_element_by_tag_name('button').click()
             time.sleep(8)  # seconds
         else:
+            buttons = chrome.find_elements_by_tag_name('button')
+            for bt in buttons:
+                if bt.text == '提交':
+                    # bt.click()
+                    # time.sleep(5)
+                    # actions = ActionChains(chrome)
+                    # # actions.move_by_offset(10, 70).context_click().perform()
+                    # actions.move_by_offset(10, 70).double_click().perform()
+                    # actions.move_by_offset(10, 70).double_click().perform()
+                    chrome.execute_script('''var buttons = document.getElementsByTagName('button');buttons[0].click();''')
+
             time.sleep(5)  # seconds
 
         html = chrome.page_source
