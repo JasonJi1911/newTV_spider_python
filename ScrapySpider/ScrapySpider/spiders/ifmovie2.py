@@ -16,9 +16,9 @@ from browsermobproxy import Server
 
 config = {
     'user': 'root',
-    'password': '874527a8bdd8ec2a',
+    'password': '696d9c48b1875ffe',
     'port': 3306,
-    'host': '47.88.17.122',
+    'host': '47.74.90.95',
     'db': 'beiwo2',
     'charset': 'utf8'
 }
@@ -54,10 +54,8 @@ class Ifvod2Spider(scrapy.Spider):
         spider = super(Ifvod2Spider, cls).from_crawler(crawler, *args, **kwargs)
         spider.conn = pymysql.Connect(**config)
 
-        server = Server(r'C:\Users\Administrator\Desktop\newTV_spider_python\ScrapySpider\ScrapySpider\Proxy\browsermob\bin\browsermob-proxy.bat')
+        server = Server(r'C:\Users\Administrator\PycharmProjects\newTV_spider_python\ScrapySpider\ScrapySpider\Proxy\browsermob\bin\browsermob-proxy.bat')
         server.start()
-        proxy = server.create_proxy()
-        spider.proxy = proxy
         spider.server = server
 
         crawler.signals.connect(spider.spider_closed, signal=signals.spider_closed)
@@ -65,7 +63,6 @@ class Ifvod2Spider(scrapy.Spider):
 
     def spider_closed(self, spider):
         spider.conn.close()
-        spider.proxy.close()
         spider.server.stop()
         print('爬虫结束了')
 

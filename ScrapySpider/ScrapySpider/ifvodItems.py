@@ -58,6 +58,8 @@ class IfVodItem(Item):
     # 播放渠道
     source = Field()
 
+    proxy = Field()
+
 
 
 

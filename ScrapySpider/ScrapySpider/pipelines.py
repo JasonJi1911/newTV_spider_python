@@ -14,9 +14,9 @@ import time
 
 config = {
     'user': 'root',
-    'password': '874527a8bdd8ec2a',
+    'password': '696d9c48b1875ffe',
     'port': 3306,
-    'host': '47.88.17.122',
+    'host': '47.74.90.95',
     'db': 'beiwo2',
     'charset': 'utf8'
 }
@@ -30,10 +30,12 @@ class IfVodPipeline:
     def process_item(self, item, spider):
         # 720推送地址
         # post_domain = 'http://src.shcdn-qq.com'
-        post_domain = 'http://174.139.47.186:2000'
-        post_url = post_domain + '/api/importDownload?format=json&key=fOJ6xXuG'
+        # post_domain = 'http://174.139.47.186:2000'
+        # post_url = post_domain + '/api/importDownload?format=json&key=fOJ6xXuG'
         # post_domain = 'http://67.198.181.58:2000'
         # post_url = post_domain + '/api/importDownload?format=json&key=RvJCmDxB'
+        post_domain = 'http://107.155.99.106:2000'
+        post_url = post_domain + '/api/importDownload?format=json&key=bWgL6ilF'
         # 1080推送地址
         # post_domain = 'http://src.shcdn-qq.com'
         # post_url = post_domain + '/api/importDownload?format=json&key=X1A4eqoM'
