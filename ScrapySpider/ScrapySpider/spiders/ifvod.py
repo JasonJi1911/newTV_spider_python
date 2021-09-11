@@ -64,8 +64,6 @@ function main(splash, args)
   assert(splash:go(args.url))
   assert(splash:wait(5))
   return {
-    html = splash:html(),
-    png = splash:png(),
     har = splash:har(),
   }
 end
@@ -198,7 +196,7 @@ end
             # conn = pymysql.Connect(**config)
             cusor = self.conn.cursor(cursor=DictCursor)
             query_table_sql = """
-                            SELECT * FROM vod_Play_480 where vod_name = %(vod_name)s and chapter_name = %(chapter_name)s
+                            SELECT * FROM vod_Play_720 where vod_name = %(vod_name)s and chapter_name = %(chapter_name)s
                             and type_name = %(type_name)s
                         """
             item_dict = dict(item)

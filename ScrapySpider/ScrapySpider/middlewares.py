@@ -124,17 +124,6 @@ class SelenuimDownloaderMiddleware:
     def process_request(self, request, spider):
         server = spider.server
         proxy = server.create_proxy()
-        proxyHost = "gate.dc.smartproxy.com"
-        proxyPort = "20000"
-        # 隧道身份信息
-        proxyUser = "sp13690464"
-        proxyPass = "jp123456"
-
-        proxy_auth_plugin_path = self.create_proxy_auth_extension(
-            proxy_host=proxyHost,
-            proxy_port=proxyPort,
-            proxy_username=proxyUser,
-            proxy_password=proxyPass)
 
         chrome_options = Options()
         chrome_options.add_argument('--proxy-server={0}'.format(proxy.proxy))
@@ -170,13 +159,13 @@ class SelenuimDownloaderMiddleware:
             for bt in buttons:
                 if bt.text == '提交':
                     chrome.execute_script('''var buttons = document.getElementsByTagName('button');buttons[0].click();''')
-            time.sleep(10)  # seconds
+            time.sleep(100)  # seconds
         elif 'a=' in url and 'cid=' not in url:
             buttons = chrome.find_elements_by_tag_name('button')
             for bt in buttons:
                 if bt.text == '提交':
                     chrome.execute_script('''var buttons = document.getElementsByTagName('button');buttons[0].click();''')
-            time.sleep(10)  # seconds
+            time.sleep(100)  # seconds
 
         html = chrome.page_source
         har = proxy.har
