@@ -111,10 +111,12 @@ class IfVodPipeline:
 class ifIqiyiPipeline:
     def process_item(self, item, spider):
         # 720推送地址
-        post_domain = 'http://174.139.47.186:2000'
-        post_url = post_domain + '/api/importDownload?format=json&key=fOJ6xXuG'
+        # post_domain = 'http://174.139.47.186:2000'
+        # post_url = post_domain + '/api/importDownload?format=json&key=fOJ6xXuG'
         # post_domain = 'http://67.198.181.58:2000'
         # post_url = post_domain + '/api/importDownload?format=json&key=RvJCmDxB'
+        post_domain = 'http://107.155.99.106:2000'
+        post_url = post_domain + '/api/importDownload?format=json&key=bWgL6ilF'
 
         # item['vod_director'] = ''
         millis = int(round(time.time() * 1000)) + 1
@@ -125,12 +127,17 @@ class ifIqiyiPipeline:
             # 查询语句
             query_table_sql = """
                 SELECT * FROM vod_Play_720 where vod_name = %(vod_name)s and chapter_name = %(chapter_name)s
-                and source = %(source)s and type_name = %(type_name)s
+                and source = 1 and type_name = %(type_name)s
+            """
+            update_sql = """
+                Update vod_Play_720 set path = %(path)s where vod_name = %(vod_name)s and chapter_name = %(chapter_name)s
             """
             # 注意表中字段和values()中的字段要一一对应
             sql = """
-                insert into vod_Play_720(vod_name, chapter_name, final_title, vod_url, source)
-                values (%(vod_name)s, %(chapter_name)s, %(final_title)s, %(vod_url)s, %(source)s)
+                insert into vod_Play_720(vod_name, chapter_name, final_title, vod_pic, vod_actor, vod_director,
+                    vod_content, vod_score, type_name, vod_class, vod_year, vod_area, vod_url, path)
+                values (%(vod_name)s, %(chapter_name)s, %(final_title)s, %(vod_pic)s, %(vod_actor)s, %(vod_director)s,
+                    %(vod_content)s, %(vod_score)s, %(type_name)s, %(vod_class)s, %(vod_year)s, %(vod_area)s, %(vod_url)s, %(path)s)
             """
             # item：dict
             # 将item转换字典
