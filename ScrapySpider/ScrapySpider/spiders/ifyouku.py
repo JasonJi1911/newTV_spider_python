@@ -21,8 +21,8 @@ config = {
     'charset': 'utf8'
 }
 
-class IfaiqiyiSpider(scrapy.Spider):
-    name = 'ifaiqiyi'
+class IfyoukuSpider(scrapy.Spider):
+    name = 'ifyouku'
     # allowed_domains = ['www.jxsp.tv']
     base_jiexi_url = 'http://rysp.tv/jx/?url='
     custom_settings = {
@@ -30,8 +30,8 @@ class IfaiqiyiSpider(scrapy.Spider):
             'ScrapySpider.pipelines.ifIqiyiPipeline': 300,
         },
     }
-    caiji_list_url = 'http://jhzy.jhdyw.vip:8091/api.php/provide/vod/from/qiyi/at/json/?ac=list&t=&pg=1&h=24&ids=&wd='
-    base_caiji_url = 'http://jhzy.jhdyw.vip:8091/api.php/provide/vod/from/qiyi/at/json/?ac=videolist&t=&h=24&ids=&wd=&pg='
+    caiji_list_url = 'http://jhzy.jhdyw.vip:8091/api.php/provide/vod/from/youku/at/json/?ac=list&t=&pg=1&h=24&ids=&wd='
+    base_caiji_url = 'http://jhzy.jhdyw.vip:8091/api.php/provide/vod/from/youku/at/json/?ac=videolist&t=&h=24&ids=&wd=&pg='
     drama_bind = ['连续剧', '国产', '港台', '日韩', '欧美']
     movie_bind = ['电影', '动作', '喜剧', '爱情', '科幻', '恐怖', '剧情', '战争', '惊悚', '犯罪', '冒险', '悬疑', '武侠', '奇幻']
     enter_bind = ['综艺']
@@ -42,7 +42,7 @@ class IfaiqiyiSpider(scrapy.Spider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        spider = super(IfaiqiyiSpider, cls).from_crawler(crawler, *args, **kwargs)
+        spider = super(IfyoukuSpider, cls).from_crawler(crawler, *args, **kwargs)
         spider.conn = pymysql.Connect(**config)
         crawler.signals.connect(spider.spider_closed, signal=signals.spider_closed)
         return spider
