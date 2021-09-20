@@ -49,12 +49,15 @@ class IfaiqiyiSpider(scrapy.Spider):
         list_res = requests.get(self.caiji_list_ul, timeout=10)
         list_dict = json.loads(list_res.text)
         page_count = list_dict['pagecount']
-        for page in range(1, page_count+1, 1):
+        for page in range(1, 2, 1):
+        # for page in range(1, page_count+1, 1):
             caiji_url = self.base_caiji_url + str(page)
             caiji_str = requests.get(caiji_url, timeout=10)
             caiji_dict = json.loads(caiji_str)
             video_list = caiji_dict['list']
-            for video in video_list:
+            for i in range(0, len(video_list), 1):
+            # for video in video_list:
+                video = video_list[i]
                 item = IfVodItem()
                 item['type_name'] = video['type_name']
                 item['vod_name'] = video['vod_name']
