@@ -11,6 +11,7 @@ from ScrapySpider.ifvodItems import IfVodItem
 import pymysql
 from pymysql.cursors import DictCursor
 from scrapy import signals
+import time
 
 config = {
     'user': 'root',
@@ -24,7 +25,7 @@ config = {
 class IfqqSpider(scrapy.Spider):
     name = 'ifqq'
     # allowed_domains = ['www.jxsp.tv']
-    base_jiexi_url = 'http://rysp.tv/jx/?url='
+    base_jiexi_url = 'http://66.165.227.210:8899/?url='
     custom_settings = {
         'ITEM_PIPELINES': {
             'ScrapySpider.pipelines.ifIqiyiPipeline': 300,
@@ -62,7 +63,7 @@ class IfqqSpider(scrapy.Spider):
             caiji_str = caiji_res.text
             caiji_dict = json.loads(caiji_str)
             video_list = caiji_dict['list']
-            # for i in range(0, 1, 1):
+            # for i in range(0, 2, 1):
             for i in range(0, len(video_list), 1):
                 video = video_list[i]
                 item = IfVodItem()
@@ -108,6 +109,8 @@ class IfqqSpider(scrapy.Spider):
                 play_url_arr = play_url_str.split('#')
                 # for j in range(0, 1, 1):
                 for j in range(0, len(play_url_arr), 1):
+                    ifitem = IfVodItem()
+                    ifitem = dict(item)
                     chapter_str = play_url_arr[j]
                     chapter_arr = chapter_str.split('$')
                     chapter_name = chapter_arr[0]
@@ -119,12 +122,28 @@ class IfqqSpider(scrapy.Spider):
                         if len(chapter_name) == 1:
                             chapter_name = '0' + chapter_name
 
-                    item['chapter_name'] = chapter_name
+                    ifitem['chapter_name'] = chapter_name
                     chapter_url = chapter_arr[1]
                     chapter_url = self.base_jiexi_url + chapter_url
+                    # --------------判断是否存在--------------
+                    # conn = pymysql.Connect(**config)
+                    cusor = self.conn.cursor(cursor=DictCursor)
+                    query_table_sql = """
+                       SELECT * FROM vod_Play_720 where vod_name = %(vod_name)s and chapter_name = %(chapter_name)s
+                       and type_name = %(type_name)s
+                   """
+                    item_dict = dict(ifitem)
+                    # --------------查询数据--------------
+                    cusor.execute(query_table_sql, item_dict)
+                    results = cusor.fetchall()
+                    print('查询到1：' + '/' + ifitem['vod_name'] + '/' + ifitem['chapter_name'])
+                    if len(results) > 0:
+                        print('该视频已经入库:' + '/' + ifitem['vod_name'] + '/' + ifitem['chapter_name'])
+                        continue
                     if chapter_url != '':
                         yield scrapy.Request(chapter_url, callback=self.parseDetail
-                                             , meta={'item': item})
+                                             , meta={'item': ifitem})
+                        time.sleep(2)
 
     def parseDetail(self, response):
         item = response.meta['item']
