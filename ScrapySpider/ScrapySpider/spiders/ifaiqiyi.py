@@ -32,6 +32,12 @@ class IfaiqiyiSpider(scrapy.Spider):
     }
     caiji_list_url = 'http://jhzy.jhdyw.vip:8091/api.php/provide/vod/from/qiyi/at/json/?ac=list&t=&pg=1&h=24&ids=&wd='
     base_caiji_url = 'http://jhzy.jhdyw.vip:8091/api.php/provide/vod/from/qiyi/at/json/?ac=videolist&t=&h=24&ids=&wd=&pg='
+    drama_bind = ['连续剧', '国产', '港台', '日韩', '欧美']
+    movie_bind = ['电影', '动作', '喜剧', '爱情', '科幻', '恐怖', '剧情', '战争', '惊悚', '犯罪', '冒险', '悬疑', '武侠', '奇幻']
+    enter_bind = ['综艺']
+    anni_bind = ['动画', '动漫']
+    docu_bind = ['记录']
+
     start_urls = list()
 
     @classmethod
@@ -46,25 +52,36 @@ class IfaiqiyiSpider(scrapy.Spider):
         print('爬虫结束了')
 
     def start_requests(self):
-        list_res = requests.get(self.caiji_list_ul, timeout=10)
+        list_res = requests.get(self.caiji_list_url, timeout=10)
         list_dict = json.loads(list_res.text)
         page_count = list_dict['pagecount']
         for page in range(1, 2, 1):
         # for page in range(1, page_count+1, 1):
             caiji_url = self.base_caiji_url + str(page)
-            caiji_str = requests.get(caiji_url, timeout=10)
+            caiji_res = requests.get(caiji_url, timeout=10)
+            caiji_str = caiji_res.text
             caiji_dict = json.loads(caiji_str)
             video_list = caiji_dict['list']
             for i in range(0, 1, 1):
             # for i in range(0, len(video_list), 1):
                 video = video_list[i]
                 item = IfVodItem()
-                item['type_name'] = video['type_name']
+                if video['type_name'] in self.rama_bind:
+                    item['type_name'] = '连续剧'
+                elif video['type_name'] in self.movie_bind:
+                    item['type_name'] = '电影'
+                elif video['type_name'] in self.enter_bind:
+                    item['type_name'] = '综艺'
+                elif video['type_name'] in self.anni_bind:
+                    item['type_name'] = '动漫'
+                elif video['type_name'] in self.docu_bind:
+                    item['type_name'] = '纪录片'
+
                 item['vod_name'] = video['vod_name']
                 item['vod_class'] = video['vod_class']
                 item['vod_actor'] = video['vod_actor']
                 item['vod_director'] = video['vod_director']
-                item['vod_class'] = video['vod_class']
+                item['vod_class'] = video['vod_class'] + ',' + video['type_name']
                 item['vod_pic'] = video['vod_pic']
                 item['vod_score'] = video['vod_score']
                 item['vod_content'] = video['vod_content']
